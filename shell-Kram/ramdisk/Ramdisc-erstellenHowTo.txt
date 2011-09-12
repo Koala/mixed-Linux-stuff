@@ -1,0 +1,140 @@
+Veröffentlicht unter: http://www.howtoforge.de/anleitung/ramdisc-erstellen-und-nutzen/
+
+ramdisc :: Erstellen und Nutzen
+
+Eine RAMDisc ist eine nützliche Sache.
+
+So kann man damit die Arbeitsgeschwindigkeit einiger Programme steigern, die Schreibzyklen auf die Festplatte erheblich reduzieren und vieles mehr. Wie das geht, das soll in diesem HowTo beispielhaft erklärt werden.
+
+Was wird benötigt?
+Ausreichend freier Arbeitsspeicher (RAM + Swap-Speicher). “Ausreichend” hängt von mehreren Faktoren ab:
+
+    Wieviel Arbeitsspeicher steht generell zur Verfügung?
+    Wieviel könnte max. für eine RAMDisc abgezweigt werden?
+    Was soll in der RAMDisc gespeichert werden?
+
+Grundsätzlich gilt, je mehr RAM zur Verfügung steht, desto besser.
+Bei mir stehen 1500 MB RAM insgesamt zur Verfügung (plus 1GB Swap). Davon habe ich 500 MB für die RAMDisc in Verwendung.
+
+Einige Beispiele zur Verwendung finden sich am Ende dieses HowTos.
+
+… und los gehts
+Alle folgenden Aktionen sind als Root (direkt oder per sudo) auszuführen!
+Als erstes muss die RAMDisc erstellt werden. Dies geschieht in der Datei /etc/fstab:
+
+vi /etc/fstab
+
+hier ist folgende Zeile einzufügen:
+
+# RAMDisc
+tmpfs /ramdisc tmpfs defaults,size=500m 0 0
+
+/ramdisc - Ort und Name der RAMDisc
+size=500m - die RAMDisc wird 500 MB groß
+
+Nun kann die RAMDisc gemountet werden:
+
+mount -a
+
+Tja und wenn alles gut ging, sollte uns ein
+
+df -h
+
+etwa folgendes ausgeben:
+
+tmpfs 500M 40M 461M 8% /ramdisc
+
+Nun kann die RAMDisc verwendet werden.
+
+Wer mit der Größe seiner RAMDisc nicht zufrieden ist, kann diese auch im laufenden Betrieb nachträglich ändern.
+Dazu bedarf es (in einer Shell als Root ausgeführt) nur eines beherzten:
+
+mount -o remount,size=400m /ramdisc
+
+und schon ist die RAMDisc 100 MB kleiner.
+Aber obacht! Man sollte die Grenzen seines Systems kennen. Ich übernehme keine Garantie für Datenverlust :-)
+
+Es gibt auch Lösungen die RAMDisc-Größe dynamisch mittels eines Daemons anpassen zu lassen.
+
+Was ist in der RAMDisc gut aufgehoben?
+
+Cache-Files und alles was einen Systemneustart nicht überleben muss :-)
+z.B. die Logdateien des Apache (Access- und Error-Log)
+Auf Systemen mit grafischer Oberfläche kann dies auch der Browser- und andere Caches sein.
+
+Dieses kleine Script hilft dabei die Links entsprechend zu setzen (nennen wir es ram_cache):
+
+#!/bin/bash
+
+RamDisc="/ramdisc"
+TempHome="${RamDisc}/${USER}"
+
+error () {
+    echo "Error: $*"
+    exit 1
+}
+
+if [ ! -d "${RamDisc}" ]; then
+    error "${RamDisk} not found."
+fi
+
+if [ -d "${TempHome}" ]; then
+    rm -r -f -v "${TempHome}"
+fi
+
+mkdir -p "${TempHome}" || error "cannot mkdir ${TempHome}"
+chmod 700 "${TempHome}" || error "cannot chmod 700 ${TempHome}"
+
+cd "${HOME}" || error "cannot change to ${HOME}"
+
+clean_and_link () {
+    NewDir="$1"
+    if [ -z "${NewDir}" ]; then
+  echo "Warning: args not found."
+  return
+    fi
+    if [ -e "${HOME}/${NewDir}" ]; then
+  rm -r -f -v "${HOME}/${NewDir}"
+    fi
+    if [ -e "${TempHome}/_TMP_${NewDir}" ]; then
+  rm -r -f -v "${TempHome}/_TMP_${NewDir}"
+    fi
+    mkdir -v -p "${TempHome}/_TMP_${NewDir}" || return
+    ln -s -f "${TempHome}/_TMP_${NewDir}" "${NewDir}"
+}
+
+if [ -d .mozilla ]; then
+    for CacheDir in `find .mozilla -maxdepth 3 -name Cache`; do
+  clean_and_link "${CacheDir}"
+    done
+fi
+
+clean_and_link '.opera/cache4'
+clean_and_link '.thumbnails'
+clean_and_link '.macromedia'
+clean_and_link '.googleearth/Cache'
+clean_and_link '.googleearth/Temp'
+clean_and_link '.java/deployment/cache'
+clean_and_link '.lzncache'
+clean_and_link '.dvdcss'
+clean_and_link '.gftp/cache'
+clean_and_link '.streamtuner/cache'
+clean_and_link '.vlc/cache'
+
+exit 0
+
+# eof
+
+Einbinden unter KDE:
+Das gespeicherte Script ausführbar machen und nach
+~/.kde/Autostart/ram_cache kopieren
+
+unter Gnome:
+ram_cache ausführbar machen und z.B. nach
+~/.login/ram_cache kopieren
+
+Danach kann man unter - System -> Einstellungen -> Sitzungen ->
+Startprogramme -> Hinzufügen - ein neuen Eintrag für dieses Skript erstellen.
+
+Programme, wie z.B. Eclipse, gestartet in der RAMDisc erfahren plötzlich eine ganz andere Geschwindigkeit.
+Dann macht das Arbeiten auch auf relativ langsamen Systemen wieder Spaß :-) 
