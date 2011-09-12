@@ -1,0 +1,23 @@
+
+copy-Scripte
+============
+
+- Logdatei für Fehler- und sonstige Meldungen einrichten
+- Meldungen aus Copy-Scripten in Logdatei schreiben lassen
+
+
+
+ram_cache-Scripte
+=================
+
+Es muss eine bessere (zentralere) Möglichkeit gefunden werden, wie die 
+einzelnen Verzeichnisse, die gelöscht und neu verlinkt werden, Verwaltet
+werden können. Derzeit befindet sich das nur in der ram_cache_start.sh-Datei.
+Sinnvoll wäre es, wenn beim Verlassen der grafischen Oberfläche oder 
+beim Beenden des Systems die angelegten Links gelöscht werden.
+Wenn es mal die RamDisk nicht geben sollte, zeigen diese sonst ins 
+Leere :-)
+
+
+
+
