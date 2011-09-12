@@ -1,4 +1,5 @@
-Veröffentlicht unter: http://www.howtoforge.de/anleitung/ramdisc-erstellen-und-nutzen/
+in ähnlicher Form Veröffentlicht unter:
+http://www.howtoforge.de/anleitung/ramdisc-erstellen-und-nutzen/
 
 ramdisc :: Erstellen und Nutzen
 
@@ -125,16 +126,63 @@ exit 0
 
 # eof
 
-Einbinden unter KDE:
-Das gespeicherte Script ausführbar machen und nach
-~/.kde/Autostart/ram_cache kopieren
 
-unter Gnome:
-ram_cache ausführbar machen und z.B. nach
-~/.login/ram_cache kopieren
+
+
+Skripte im Homeverzeichnis eines Users
+======================================
+
+ram_cache_start.sh
+------------------
+löscht diverse Verzeichnisse und verlinkt sie auf die Ramdisk
+Die Verzeichnisse können angepasst werden, aber man sollte wissen, was man tut!
+
+ram_cache_stop.sh
+-----------------
+löscht Verzeichnisse auf der Ramdisk
+
+Die Skripte ram_cache_start und ram_cache_stop müssen beim Einloggen
+und beim Ausloggen ausgeführt werden.
+
+z.B. unter KDE:
+***************
+
+ram_cache_start ausführbar machen und nach
+~/.kde/Autostart/ram_cache_start.sh kopieren
+
+ram_cache_stop ausführbar machen und nach
+~/.kde/shutdown/ram_cache_stop.sh kopieren
+
+z.B. unter Gnome:
+*****************
+
+ram_cache_start ausführbar machen und z.B. nach
+~/.login/ram_cache_start kopieren
 
 Danach kann man unter - System -> Einstellungen -> Sitzungen ->
-Startprogramme -> Hinzufügen - ein neuen Eintrag für dieses Skript erstellen.
+Startprogramme -> Hinzufügen - ein neuen Eintrag für dieses Skript erstellen. 
+
+Unter Gnome ist es nicht ganz so einfach, weil man nicht wirklich ein
+logout-Skript angeben kann.  Wir behelfen und mit einem geänderten 
+/etc/gdm/PostSession/Default Skript, welches diese Funktion nachrüstet.
+Dabei werden Skripte, die im Homeverzeichnis des Users unter ~/.logout
+liegen, per run-parts im Userkontext ausgeführt. Für genaue Informationen
+über run-parts bitte die Manpage lesen!
+
+Das Skript Default nach /etc/gdm/PostSession/Default kopieren, eventuell
+einen Backup von der originalen Datei erstellen.
+Das Skript muss ausführbar sein und muss root gehören!
+
+ram_cache_stop ausführbar machen und nach
+~/.logout/ram_cache_stop kopieren
+
+Diese Logout-Funktion darf man auch mit anderen Skripten erweitern.
+Als Beispiel kann man das Skript find-trash nach ~/.logout/find-trash
+kopieren. Es entfernt automatisch nach 7 Tagen den Müll aus dem Trash.
+
+Das war es schon: Have a lot of fun! ;-)
+
+
 
 Programme, wie z.B. Eclipse, gestartet in der RAMDisc erfahren plötzlich eine ganz andere Geschwindigkeit.
 Dann macht das Arbeiten auch auf relativ langsamen Systemen wieder Spaß :-) 
