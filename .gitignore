@@ -34,3 +34,6 @@ local.properties
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+/useful_linux_things.txt
+/shell-Kram/useful_shell_things.txt
