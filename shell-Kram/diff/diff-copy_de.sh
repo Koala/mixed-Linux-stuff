@@ -313,7 +313,7 @@ dosomething()
 
   # lies den kompletten Diff ein
 	diffkomplett=$(LANG=C diff -rq $v1 $v2)
-   echo $diffkomplett > pfadv3.txt	     # <<<<<<<<<<<<<<<<<< ECHO NUR FUER DEBUG
+
 	for zeile in $diffkomplett
 	do
 	  # setze Var auf Null
