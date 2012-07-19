@@ -94,15 +94,13 @@ diff_copy()
   # wenn DEST nicht existiert, versuche es anzulegen
   if [[ ! -d "$DEST" ]]
   then
-      #say_error "$DEST ist kein Verzeichnis."
-      #exit 1
       erstelle_dest $DEST
   fi
 
   # pruefe die Komprimierungsart
   if [[ ! -z "$PACK" ]] && ([[ "$PACK" != "TGZ" ]] || [[ "$PACK" != "ZIP" ]]) 
   then
-      say_error "$DEST ist keine gültige Komprimierungsmöglichkeit."
+      say_error "$PACK ist keine gültige Komprimierungsmöglichkeit."
       exit 1
   fi
 
@@ -114,19 +112,66 @@ diff_copy()
 # only for tests in development phase
 testing()
 {
+  DIR="$@"
+  tars=
+  zips=
+  
   # pruefe ob am Ende des Pfades ein Slash steht
-  # der ist zwingend für die korrekte Verzeichniserstellung
+  # für die zu erstellendekomprimierte Datei darf da kein Slash sein 
   # Stringlänge:
   l=$(echo ${#DEST})
   l=$(( $l - 1 ))
   
-  # letztes Zeichen in DEST?
+  # letztes Zeichen in DEST ist:
   slash=$(echo ${DEST:l:1})
 
-  # letztes Zeichen muss ein Slash sein, wenn nicht, erweitere DEST um dieses Zeichen
-  if [[ "$slash" != "/" ]]
+  # letztes Zeichen darf kein Slash sein
+  if [[ "$slash" == "/" ]]
   then
-    DEST=$DEST"/"
+    # den Slash am Zeilenende noch entfernen
+    DESTPACK=${DEST%/}
+  fi
+  
+  if [[ "$PACK" == "TGZ" ]]
+  then
+    DESTTGZ=$DESTPACK".tgz"
+    #packerror=$(tar -czf $DESTTGZ $DEST)
+    tar -czf $DESTTGZ $DEST 2> /dev/null
+    packerror=$?
+        
+    if [[ $packerror -eq 0 ]]
+    then
+        say "Verzeichnis $DEST erfolgreich nach $DESTTGZ komprimiert."
+    fi
+    if [[ $packerror -eq 1 ]]
+    then
+        say_error "Es trat ein Fehler beim Erstellen von $DESTTGZ auf."
+        exit 1
+    fi
+    if [[ $packerror -eq 2 ]]
+    then
+        say_error "Verzeichnis $DEST nicht gefunden."
+        exit 1
+    fi
+    
+  fi
+  
+  
+  if [[ "$PACK" == "ZIP" ]]
+  then
+    DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
+    packerror=$(zip -r -q $DESTPACK $DEST)
+    packerrorzip=$?
+    if [[ $packerrorzip -eq 0 ]]
+    then
+        say "Verzeichnis $DEST erfolgreich nach $DESTZIP komprimiert."
+    fi
+        
+    if [[ ! $packerrorzip -eq 0 ]] 
+    then
+        say_error "$DESTPACK.zip konnte nicht erstellt werden. ZIP meldet: $packerror"
+        exit 1
+    fi
   fi
   
   exit 1
@@ -302,9 +347,68 @@ statistik()
 # private
 compressing()
 {
+  DIR="$@"
+  tars=
+  zips=
+  packerror=
+  DESTPACK=
   
-  echo 
+  # pruefe ob am Ende des Pfades ein Slash steht
+  # für die zu erstellende komprimierte Datei darf da kein Slash sein 
+  # Stringlänge:
+  l=$(echo ${#DEST})
+  l=$(( $l - 1 ))
   
+  # letztes Zeichen in DEST ist:
+  slash=$(echo ${DEST:l:1})
+
+  # letztes Zeichen darf kein Slash sein
+  if [[ "$slash" == "/" ]]
+  then
+    # den Slash am Zeilenende noch entfernen
+    DESTPACK=${DEST%/}
+  fi
+  
+  if [[ "$PACK" == "TGZ" ]]
+  then
+    DESTTGZ=$DESTPACK".tgz"
+    #packerror=$(tar -czf $DESTTGZ $DEST)
+    tar -czf $DESTTGZ $DEST 2> /dev/null
+    packerror=$?
+        
+    if [[ $packerror -eq 0 ]]
+    then
+        say "Verzeichnis $DEST erfolgreich nach $DESTTGZ komprimiert."
+    fi
+    if [[ $packerror -eq 1 ]]
+    then
+        say_error "Es trat ein Fehler beim Erstellen von $DESTTGZ auf."
+        exit 1
+    fi
+    if [[ $packerror -eq 2 ]]
+    then
+        say_error "Verzeichnis $DEST nicht gefunden."
+        exit 1
+    fi
+  fi
+  
+  
+  if [[ "$PACK" == "ZIP" ]]
+  then
+    DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
+    packerror=$(zip -r -q $DESTPACK $DEST)
+    packerrorzip=$?
+    if [[ $packerrorzip -eq 0 ]]
+    then
+        say "Verzeichnis $DEST erfolgreich nach $DESTZIP komprimiert."
+    fi
+        
+    if [[ ! $packerrorzip -eq 0 ]] 
+    then
+        say_error "$DESTPACK.zip konnte nicht erstellt werden. ZIP meldet: $packerror"
+        exit 1
+    fi
+  fi
 }
 
 
