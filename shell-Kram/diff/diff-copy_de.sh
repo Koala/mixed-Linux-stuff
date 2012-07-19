@@ -15,11 +15,14 @@ Usage:
 $0 [OPTIONS] -a [SOURCE1] -b [SOURCE2] -c [DESTINATION]
 $0 -s [DIR]
 
-Wenn [OPTIONS] angegeben ist, wird [DEST] entsprechend der Einstellung komprimiert.  
+Wenn -p angegeben ist, wird [DEST] entsprechend der Einstellung komprimiert.  
 Die Verzeichnisse [SOURCE1] und [SOURCE2] müssen existieren.
 Wenn [DEST] nicht existiert, wird versucht es anzulegen.
 [SOURCE1] ist das Quellverzeichnis, aus dem die neueren bzw. geänderten Dateien nach [DEST] kopiert werden.
 [SOURCE2] ist das Quellverzeichnis, mit dem [SOURCE1] verglichen wird. Hieraus werden keine Dateien kopiert.
+
+Wenn Verzeichnisnamen Leerzeichen enthalten, so müssen diese evtl. in Anführungsstriche geschrieben werden.
+$0 -p TGZ -a "Ver zeichnis1/" -b "Verzei chnis2" -c "ich existiere noch nicht"
 
 Die Statistik-Option "-s" ist nicht mit anderen Optionen kombinierbar. 
 
@@ -29,6 +32,7 @@ Options:
   -c  Destination
   -p  TGZ oder ZIP - erstelle entsprechendes Archiv aus [DEST] 
   -q  Quiet Mode / keinerlei Ausgaben (bis auf Fehlermeldungen)
+
   -s  [DIR] gibt eine Statistik für das angegebene Verzeichnis aus
   -h  diese kleine Hilfe hier
 
@@ -64,12 +68,6 @@ diff_copy()
 		esac
 	done
 
-#say $PACK
-#say $QUIET
-#say $SRC1
-#say $SRC2
-#say $DEST
-
 
   # pruefe ob zumindest die notwendigen Verzeichnisargumente uebergeben wurden
 	if [[ -z "$SRC1" ]] || [[ -z "$SRC2" ]] || [[ -z "$DEST" ]]
@@ -92,16 +90,31 @@ diff_copy()
   fi
 
   # wenn DEST nicht existiert, versuche es anzulegen
+  plusslash
   if [[ ! -d "$DEST" ]]
   then
-      erstelle_dest $DEST
+      erstelle_dest "$DEST"
   fi
 
+	error_pack_tgz=0
+	error_pack_zip=0
   # pruefe die Komprimierungsart
-  if [[ ! -z "$PACK" ]] && ([[ "$PACK" != "TGZ" ]] || [[ "$PACK" != "ZIP" ]]) 
-  then
-      say_error "$PACK ist keine gültige Komprimierungsmöglichkeit."
-      exit 1
+  #if [ ! -z "$PACK" ] && ( [ "$PACK" != "TGZ" ] || [ "$PACK" != "ZIP" ] ) # funktioniert nicht ??? 
+  if [ ! -z "$PACK" ] 
+    then
+      if [ "$PACK" != "TGZ" ]
+      then
+        error_pack_tgz=1
+      fi
+      if [ "$PACK" != "ZIP" ]
+      then
+        error_pack_zip=1
+      fi
+      if [ $error_pack_tgz -eq 1 ] && [ $error_pack_zip -eq 1 ]
+      then
+        say_error "\"$PACK\" ist keine gültige Komprimierungsmöglichkeit."
+        exit 1
+      fi
   fi
 
   dosomething
@@ -136,7 +149,7 @@ testing()
   then
     DESTTGZ=$DESTPACK".tgz"
     #packerror=$(tar -czf $DESTTGZ $DEST)
-    tar -czf $DESTTGZ $DEST 2> /dev/null
+    tar -czf "$DESTTGZ" "$DEST" 2> /dev/null
     packerror=$?
         
     if [[ $packerror -eq 0 ]]
@@ -160,7 +173,7 @@ testing()
   if [[ "$PACK" == "ZIP" ]]
   then
     DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
-    packerror=$(zip -r -q $DESTPACK $DEST)
+    packerror=$(zip -r -q "$DESTPACK" "$DEST")
     packerrorzip=$?
     if [[ $packerrorzip -eq 0 ]]
     then
@@ -221,7 +234,7 @@ erstelle_dest()
   # letztes Zeichen muss ein Slash sein, wenn nicht, erweitere DEST um dieses Zeichen
   if [[ "$slash" != "/" ]]
   then
-    DEST=$DEST"/"
+    DEST="$DEST""/"
   fi
   
   dirmk=$(mkdir -p "$@")
@@ -240,20 +253,67 @@ dosomething()
 	IFS_BAK="$IFS";
   #IFS=$'\n';
 	IFS=$'\r\n';
-	
+	SRC11=
+	SRC22=
+  
+  ####################################
+  # SRC1
+  ####################################
+  # pruefe ob am Ende des Pfades ein Slash steht
+  # der muss weg 
+  # Stringlänge:
+  l=$(echo ${#SRC1})
+  l=$(( $l - 1 ))
+  
+  # letztes Zeichen in DEST ist:
+  slash=$(echo ${SRC1:l:1})
+
+  # letztes Zeichen darf kein Slash sein
+  if [[ "$slash" == "/" ]]
+  then
+    # den Slash am Zeilenende noch entfernen
+    SRC11=${SRC1%/}
+  fi
+  ####################################
+  # SRC1
+  ####################################
+      
+  ####################################
+  # SRC2
+  ####################################
+  # pruefe ob am Ende des Pfades ein Slash steht
+  # der muss weg 
+  # Stringlänge:
+  l=$(echo ${#SRC2})
+  l=$(( $l - 1 ))
+  
+  # letztes Zeichen in DEST ist:
+  slash=$(echo ${SRC2:l:1})
+
+  # letztes Zeichen darf kein Slash sein
+  if [[ "$slash" == "/" ]]
+  then
+    # den Slash am Zeilenende noch entfernen
+    SRC22=${SRC2%/}
+  fi
+  ####################################
+  # SRC2
+  ####################################
+    
+  
   # v1 neue Version
   #v1=44
-	v1="$SRC1"
+	v1="$SRC11"
   # v2 alte Version
   #v2=433
-	v2="$SRC2"
+	v2="$SRC22"
   # v3 Zielverzeichnis
   #v3=tdiff
 	v3="$DEST"
-	
+
   # lies den kompletten Diff ein
 	diffkomplett=$(LANG=C diff -rq $v1 $v2)
-	
+   echo $diffkomplett > pfadv3.txt	     # <<<<<<<<<<<<<<<<<< ECHO NUR FUER DEBUG
 	for zeile in $diffkomplett
 	do
 	  # setze Var auf Null
@@ -286,12 +346,12 @@ dosomething()
 	    # Das Source Verzeichnis am Anfang entfernen
 	    pfad=${pfad#$v1}
 	    # setzen neuen Pfad zusammen
-	    pfadv3=$v3$pfad
-	
+	    pfadv3="$v3""$pfad"
+
 	    # erzeuge Verzeichnisstrucktur
-	    mkdir -p $pfadv3
+	    mkdir -p "$pfadv3"
 	    # kopiere Dateien und Subverzeichnisse falls notwendig
-	    cp $cp_all $val $pfadv3
+	    cp $cp_all $val "$pfadv3"
 	  fi
 	
 	  #if echo $zeile | grep -q "^Files .* differ$"
@@ -304,18 +364,21 @@ dosomething()
 	    # Das Source Verzeichnis am Anfang entfernen
 	    pfad=${pfad#$v1}
 	    # setzen neuen Pfad zusammen
-	    pfadv3=$v3$pfad
-	
+	    pfadv3="$v3""$pfad"
+
 	    # erzeuge Verzeichnisstrucktur
-	    mkdir -p $pfadv3
+	    mkdir -p "$pfadv3"
 	
 	    # kopiere Dateien
-	    cp $val $pfadv3
+	    cp $val "$pfadv3"
 	  fi
 	
 	done
 	
-	statistik $DEST
+	statistik "$DEST"
+	compressing
+
+  IFS="$IFS_BAK"
 
 } # dosomething()
 
@@ -373,21 +436,21 @@ compressing()
   then
     DESTTGZ=$DESTPACK".tgz"
     #packerror=$(tar -czf $DESTTGZ $DEST)
-    tar -czf $DESTTGZ $DEST 2> /dev/null
+    tar -czf "$DESTTGZ" "$DEST" 2> /dev/null
     packerror=$?
         
     if [[ $packerror -eq 0 ]]
     then
-        say "Verzeichnis $DEST erfolgreich nach $DESTTGZ komprimiert."
+        say "Verzeichnis \"$DEST\" erfolgreich nach \"$DESTTGZ\" komprimiert."
     fi
     if [[ $packerror -eq 1 ]]
     then
-        say_error "Es trat ein Fehler beim Erstellen von $DESTTGZ auf."
+        say_error "Es trat ein Fehler beim Erstellen von \"$DESTTGZ\" auf."
         exit 1
     fi
     if [[ $packerror -eq 2 ]]
     then
-        say_error "Verzeichnis $DEST nicht gefunden."
+        say_error "Verzeichnis \"$DEST\" nicht gefunden."
         exit 1
     fi
   fi
@@ -396,11 +459,11 @@ compressing()
   if [[ "$PACK" == "ZIP" ]]
   then
     DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
-    packerror=$(zip -r -q $DESTPACK $DEST)
+    packerror=$(zip -r -q "$DESTPACK" "$DEST")
     packerrorzip=$?
     if [[ $packerrorzip -eq 0 ]]
     then
-        say "Verzeichnis $DEST erfolgreich nach $DESTZIP komprimiert."
+        say "Verzeichnis \"$DEST\" erfolgreich nach \"$DESTZIP\" komprimiert."
     fi
         
     if [[ ! $packerrorzip -eq 0 ]] 
@@ -411,12 +474,30 @@ compressing()
   fi
 }
 
+# pruefe ob am Verzeichnis ein Slash dran ist
+# wenn nicht, füge eine Slash an
+# private
+plusslash()
+{
+  # pruefe ob am Ende des Pfades ein Slash steht
+  # der ist zwingend für die korrekte Verzeichniserstellung
+  # Stringlänge:
+  l=$(echo ${#DEST})
+  l=$(( $l - 1 ))
+  
+  # letztes Zeichen in DEST ist:
+  slash=$(echo ${DEST:l:1})
 
+  # letztes Zeichen muss ein Slash sein, wenn nicht, erweitere DEST um dieses Zeichen
+  if [[ "$slash" != "/" ]]
+  then
+    DEST="$DEST""/"
+  fi
+}
 
 
 diff_copy "$@"
 
 
-IFS="$IFS_BAK"
 
 exit 0
