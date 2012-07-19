@@ -1,5 +1,9 @@
 19.07.2012
 
+[TODO]
+Funktion zum automatischen komprimieren des Zielverzeichnisses muss noch fertig werden.
+
+
 diff-copy kopiert alle unterschiedlichen Verzeichnisse und Dateien aus dem Verzeichnisvergleich in ein neues Verzeichnis.
 
 Basierend auf deutscher Konsolenausgabe. Die Ausgabe kann je nach diff-Version und Übersetzung auch anders aussehen.
