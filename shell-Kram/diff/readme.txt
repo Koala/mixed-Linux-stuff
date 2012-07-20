@@ -1,5 +1,16 @@
-19.07.2012
+##############################################################################
+diff-copy_de.sh
+Copyright (C) [2012]  [Koala]
 
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
+ 
+Version: 0.2
+  Datum: 20.07.2012
+  Autor: Koala (https://github.com/Koala)
+ Lizenz: GPL
+##############################################################################
 
 
 diff-copy kopiert alle unterschiedlichen Verzeichnisse und Dateien aus dem Verzeichnisvergleich in ein neues Verzeichnis.

@@ -1,10 +1,23 @@
 #!/bin/bash
+# diff-copy_de.sh
+# Copyright (C) [2012]  [Koala]
+#
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 # 
+# Version: 0.2
+#   Datum: 20.07.2012
+#   Autor: Koala (https://github.com/Koala)
+#  Lizenz: GPL
+#
+#
 # Die verwendete Basis:
 # echo $LANG
 # de_DE.UTF-8
 # 
 
+# wurde kein Argument beim Aufruf übergeben, dann soll die Hilfe aufgerufen werden
 if [ $# -eq 0 ]; then
   set -- -h
 fi
@@ -117,6 +130,7 @@ diff_copy()
       fi
   fi
 
+  # los gehts
   dosomething
 
 }
@@ -125,69 +139,8 @@ diff_copy()
 # only for tests in development phase
 testing()
 {
-  DIR="$@"
-  tars=
-  zips=
-  
-  # pruefe ob am Ende des Pfades ein Slash steht
-  # für die zu erstellendekomprimierte Datei darf da kein Slash sein 
-  # Stringlänge:
-  l=$(echo ${#DEST})
-  l=$(( $l - 1 ))
-  
-  # letztes Zeichen in DEST ist:
-  slash=$(echo ${DEST:l:1})
-
-  # letztes Zeichen darf kein Slash sein
-  if [[ "$slash" == "/" ]]
-  then
-    # den Slash am Zeilenende noch entfernen
-    DESTPACK=${DEST%/}
-  fi
-  
-  if [[ "$PACK" == "TGZ" ]]
-  then
-    DESTTGZ=$DESTPACK".tgz"
-    #packerror=$(tar -czf $DESTTGZ $DEST)
-    tar -czf "$DESTTGZ" "$DEST" 2> /dev/null
-    packerror=$?
-        
-    if [[ $packerror -eq 0 ]]
-    then
-        say "Verzeichnis $DEST erfolgreich nach $DESTTGZ komprimiert."
-    fi
-    if [[ $packerror -eq 1 ]]
-    then
-        say_error "Es trat ein Fehler beim Erstellen von $DESTTGZ auf."
-        exit 1
-    fi
-    if [[ $packerror -eq 2 ]]
-    then
-        say_error "Verzeichnis $DEST nicht gefunden."
-        exit 1
-    fi
-    
-  fi
-  
-  
-  if [[ "$PACK" == "ZIP" ]]
-  then
-    DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
-    packerror=$(zip -r -q "$DESTPACK" "$DEST")
-    packerrorzip=$?
-    if [[ $packerrorzip -eq 0 ]]
-    then
-        say "Verzeichnis $DEST erfolgreich nach $DESTZIP komprimiert."
-    fi
-        
-    if [[ ! $packerrorzip -eq 0 ]] 
-    then
-        say_error "$DESTPACK.zip konnte nicht erstellt werden. ZIP meldet: $packerror"
-        exit 1
-    fi
-  fi
-  
-  exit 1
+  echo "Nothing to see here :-)"
+  exit 0
 }
 # only for tests in development phase
 
