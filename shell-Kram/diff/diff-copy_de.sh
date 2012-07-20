@@ -6,7 +6,7 @@
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 # 
-# Version: 0.2
+# Version: 0.2.1
 #   Datum: 20.07.2012
 #   Autor: Koala (https://github.com/Koala)
 #  Lizenz: GPL
@@ -411,8 +411,8 @@ compressing()
   
   if [[ "$PACK" == "ZIP" ]]
   then
-    DESTZIP=$DESTPACK".zip" # nur für die Meldungsausgabe benötigt
-    packerror=$(zip -r -q "$DESTPACK" "$DEST")
+    DESTZIP=$DESTPACK".zip"
+    packerror=$(zip -r -q "$DESTZIP" "$DEST")
     packerrorzip=$?
     if [[ $packerrorzip -eq 0 ]]
     then
