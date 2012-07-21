@@ -9,20 +9,24 @@
 #                 Einstellungen Anfang
 #######################################################################
 
+# Name der gepackten Firefox-Datei ohne ".tgz"
+# Nur diese Angabe muss bei jeder neuen Version angepasst werden.
+FIREFOXVERSION=firefox13
+
 # Pfad zur RAM-Disk
-RAM_DISK="/ramdisc"
+RAM_DISK=/ramdisc
 
-# Verzeichnis für Eclipse in der Ramdisk
-SYD_DIR="${RAM_DISK}/firefox6"
-
-# Dateien
-FIREFOX_TAR_DATEI="firefox6.tgz"
-
+# Pfad zum Verzeichnis in dem sich Firefox befindet
 SRC_PFAD="$HOME/Programme"
 
 #######################################################################
 #                 Einstellungen Ende
 #######################################################################
+
+
+# Directory for saving data
+SYD_Dir=$RAM_DISK/$FIREFOXVERSION
+
 
 
 # With Parameter -q we will be quiet (for cron etc)
@@ -34,22 +38,18 @@ fi
 
 # wenn firefox noch nicht existiert, dann kopiere es
 if [ ! -d $SYD_Dir ]; then
-  #cp -R $Quell_Dir $RAM_DISK
   
   cd $RAM_DISK
-  tar -xzf ${SRC_PFAD}/${FIREFOX_TAR_DATEI}
+  tar -xzf $SRC_PFAD/$FIREFOXVERSION.tgz
   
   $NOQUIET && echo " -> Creating $SYD_Dir..."
   cd $SYD_DIR
   ($SYD_Dir/firefox &)
-
 else
-
   $NOQUIET && echo " -> gehe zu $SYD_Dir "
   cd $SYD_DIR
   ($SYD_Dir/firefox &)
 fi
-
 
 
 
