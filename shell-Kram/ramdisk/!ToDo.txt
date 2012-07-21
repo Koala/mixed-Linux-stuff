@@ -18,6 +18,8 @@ beim Beenden des Systems die angelegten Links gelöscht werden.
 Wenn es mal die RamDisk nicht geben sollte, zeigen diese sonst ins 
 Leere :-)
 
-
+Den Pfad zum Ram-Home-Cache könnte man per Export in einer globalen Variablen 
+dem System zur Verfügung stellen. So mit wäre über diese Var der Zugriff 
+direkt möglich. 
 
 
