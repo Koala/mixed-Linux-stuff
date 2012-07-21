@@ -37,14 +37,16 @@ clean_and_link () {
     ln -s -f "${TempHome}/_TMP_${NewDir}" "${NewDir}"
 }
 
-if [ -d .mozilla ]; then
-    for CacheDir in `find .mozilla -maxdepth 3 -name Cache`; do
+# Funktioniert nicht immer korrekt.
+# See bug: https://bugzilla.mozilla.org/show_bug.cgi?id=320535 and some other more
+#if [ -d .mozilla ]; then
+#    for CacheDir in `find .mozilla -maxdepth 3 -name Cache`; do
 #	if [ -f "${CacheDir}" ]; then
 #	    continue
 #        fi
-	clean_and_link "${CacheDir}"
-    done
-fi
+#	clean_and_link "${CacheDir}"
+#    done
+#fi
 
 #clean_and_link '.opera/cache4'
 #clean_and_link '.thumbnails'
