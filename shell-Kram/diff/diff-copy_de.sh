@@ -1,13 +1,13 @@
 #!/bin/bash
 # diff-copy_de.sh
-# Copyright (C) [2012]  [Koala]
+# Copyright (C) [2013]  [Koala]
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 # 
-# Version: 0.2.1
-#   Datum: 20.07.2012
+# Version: 0.2.2
+#   Datum: 04.04.2013
 #   Autor: Koala (https://github.com/Koala)
 #  Lizenz: GPL
 #
@@ -265,7 +265,8 @@ dosomething()
 	v3="$DEST"
 
   # lies den kompletten Diff ein
-	diffkomplett=$(LANG=C diff -rq $v1 $v2)
+	#diffkomplett=$(LANG=C diff -rq $v1 $v2)
+  diffkomplett=$(LANG=de_DE.UTF-8 diff -rq $v1 $v2)
 
 	for zeile in $diffkomplett
 	do
