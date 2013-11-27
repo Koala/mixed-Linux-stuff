@@ -6,8 +6,8 @@
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 # 
-# Version: 0.2.2
-#   Datum: 04.04.2013
+# Version: 0.2.3
+#   Datum: 27.11.2013
 #   Autor: Koala (https://github.com/Koala)
 #  Lizenz: GPL
 #
@@ -357,6 +357,7 @@ statistik()
     en="se"
   fi
   say "$dirs Verzeichnis$en befinden sich im Verzeichnis \"$DIR\" (inkl. dem Verzeichnis selbst)."
+  
 }
 
 
@@ -369,6 +370,7 @@ compressing()
   zips=
   packerror=
   DESTPACK=
+  DESTPACKforMD5=
   
   # pruefe ob am Ende des Pfades ein Slash steht
   # für die zu erstellende komprimierte Datei darf da kein Slash sein 
@@ -396,6 +398,7 @@ compressing()
     if [[ $packerror -eq 0 ]]
     then
         say "Verzeichnis \"$DEST\" erfolgreich nach \"$DESTTGZ\" komprimiert."
+        DESTPACKforMD5=$DESTTGZ
     fi
     if [[ $packerror -eq 1 ]]
     then
@@ -418,6 +421,7 @@ compressing()
     if [[ $packerrorzip -eq 0 ]]
     then
         say "Verzeichnis \"$DEST\" erfolgreich nach \"$DESTZIP\" komprimiert."
+        DESTPACKforMD5=$DESTZIP
     fi
         
     if [[ ! $packerrorzip -eq 0 ]] 
@@ -426,6 +430,15 @@ compressing()
         exit 1
     fi
   fi
+  
+  
+  # wenn eine Datei erstellt wurde, ermittle die MD5-Prüfsumme und gib sie aus
+  if [[ -f "$DESTPACKforMD5"   ]]
+  then
+    md5summe=$(md5sum $DESTPACKforMD5)
+    say "MD5-Prüfsumme: $md5summe"
+  fi
+  
 }
 
 # pruefe ob am Verzeichnis ein Slash dran ist
