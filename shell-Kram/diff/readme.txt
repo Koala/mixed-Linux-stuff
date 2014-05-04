@@ -1,13 +1,13 @@
 ##############################################################################
 diff-copy_de.sh
-Copyright (C) [2013]  [Koala]
+Copyright (C) [2014]  [Koala]
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
  
-Version: 0.2.3
-  Datum: 27.11.2013
+Version: 0.2.4
+  Datum: 04.05.2014
   Autor: Koala (https://github.com/Koala)
  Lizenz: GPL
 ##############################################################################
@@ -18,7 +18,6 @@ diff-copy kopiert alle unterschiedlichen Verzeichnisse und Dateien aus dem Verze
 Basierend auf deutscher Konsolenausgabe. Die Ausgabe kann je nach diff-Version und Übersetzung auch anders aussehen.
 Daher gilt, dass die Auswertung der diff-Rückgabe entsprechend angepasst werden muss.
 Evtl. könnte das auch noch etwas universeller gestaltet werden.
-
 
 
 Usage: 
@@ -47,9 +46,13 @@ Options:
   -h  diese kleine Hilfe hier
 
 
+#################
+ :: Changelog :: 
+#################
+
+[0.2.4]
+- MD5SUMME Ausgabe in Konsole und in Datei eingebaut
+Momentan ist der Dateiname noch fest im Code hinterlegt.
+- Fehler beim kopieren versteckter Dateien behoben
 
 
-
-
-
- 

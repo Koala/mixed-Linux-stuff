@@ -1,13 +1,13 @@
 #!/bin/bash
 # diff-copy_de.sh
-# Copyright (C) [2013]  [Koala]
+# Copyright (C) [2014]  [Koala]
 #
 # This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 # This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 # 
-# Version: 0.2.3
-#   Datum: 27.11.2013
+# Version: 0.2.4
+#   Datum: 04.05.2014
 #   Autor: Koala (https://github.com/Koala)
 #  Lizenz: GPL
 #
@@ -58,6 +58,7 @@ PACK=   # kann TGZ oder ZIP sein
 SRC1=   # muss ein Verzeichnis sein
 SRC2=   # muss ein Verzeichnis sein
 DEST=   # muss ein Verzeichnis sein
+MD5FILE='md5file.txt' # Name der Datei mit den MD5-Pruefsummen
 
 
 # init
@@ -292,7 +293,8 @@ dosomething()
 	    # was sich darin befindet
 	    if [ -d $val ]; then
 	      pfad=$val
-	      val=$val/*
+	      #	      val=$val/*
+        val=$val/.   # auch versteckte Dateien beruecksichtigen -> der "." (Punkt) ist entscheident!
 	      cp_all=-r
 	    else 
 	      pfad=$(dirname $val)
@@ -432,10 +434,11 @@ compressing()
   fi
   
   
-  # wenn eine Datei erstellt wurde, ermittle die MD5-Prüfsumme und gib sie aus
+  # wenn eine Datei erstellt wurde, ermittle die MD5-Prüfsumme, speicher sie in eine Datei und zeige die MD5-Summe an
   if [[ -f "$DESTPACKforMD5"   ]]
   then
     md5summe=$(md5sum $DESTPACKforMD5)
+    $(echo $md5summe >> $MD5FILE)
     say "MD5-Prüfsumme: $md5summe"
   fi
   
