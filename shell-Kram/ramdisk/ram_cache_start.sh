@@ -39,6 +39,17 @@ clean_and_link () {
     ln -s -f "${TempHome}/_TMP_${NewDir}" "${NewDir}"
 }
 
+# Debian
+if [ -d .cache/mozilla ]; then
+    for CacheDir in $(find .cache/mozilla -maxdepth 3 -name cache2); do
+        if [ -f "${CacheDir}" ]; then
+            continue
+        fi
+        clean_and_link "${CacheDir}"
+    done
+fi
+
+
 # Funktioniert nicht immer korrekt.
 # See bug: https://bugzilla.mozilla.org/show_bug.cgi?id=320535 and some other more
 #if [ -d .mozilla ]; then
@@ -51,7 +62,7 @@ clean_and_link () {
 #fi
 
 #clean_and_link '.opera/cache4'
-#clean_and_link '.thumbnails'
+clean_and_link '.cache/thumbnails'
 #clean_and_link '.macromedia'
 clean_and_link '.googleearth/Cache'
 clean_and_link '.googleearth/Temp'
