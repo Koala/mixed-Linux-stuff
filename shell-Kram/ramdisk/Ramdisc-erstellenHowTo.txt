@@ -1,4 +1,14 @@
-in ähnlicher Form Veröffentlicht unter:
+                    !!! A C H T U N G !!!
+
+Diese Informationen sind inzwischen teilweise veraltet.
+Insbesondere diverse Pfadangaben stimmen mit aktuellen KDE/Gnome-Versionen
+nicht überein.
+Das in diesem Text enthaltenen Beispielscript ist ebenfalls nicht mehr aktuell.
+
+                    !!! A C H T U N G !!!
+
+
+In ähnlicher Form Veröffentlicht unter:
 http://www.howtoforge.de/anleitung/ramdisc-erstellen-und-nutzen/
 
 ramdisc :: Erstellen und Nutzen
@@ -160,10 +170,10 @@ ram_cache_start ausführbar machen und z.B. nach
 ~/.login/ram_cache_start kopieren
 
 Danach kann man unter - System -> Einstellungen -> Sitzungen ->
-Startprogramme -> Hinzufügen - ein neuen Eintrag für dieses Skript erstellen. 
+Startprogramme -> Hinzufügen - ein neuen Eintrag für dieses Skript erstellen.
 
 Unter Gnome ist es nicht ganz so einfach, weil man nicht wirklich ein
-logout-Skript angeben kann.  Wir behelfen und mit einem geänderten 
+logout-Skript angeben kann.  Wir behelfen und mit einem geänderten
 /etc/gdm/PostSession/Default Skript, welches diese Funktion nachrüstet.
 Dabei werden Skripte, die im Homeverzeichnis des Users unter ~/.logout
 liegen, per run-parts im Userkontext ausgeführt. Für genaue Informationen
@@ -185,4 +195,4 @@ Das war es schon: Have a lot of fun! ;-)
 
 
 Programme, wie z.B. Eclipse, gestartet in der RAMDisc erfahren plötzlich eine ganz andere Geschwindigkeit.
-Dann macht das Arbeiten auch auf relativ langsamen Systemen wieder Spaß :-) 
+Dann macht das Arbeiten auch auf relativ langsamen Systemen wieder Spaß :-)
