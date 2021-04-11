@@ -26,14 +26,14 @@ cd "${HOME}" || error "Error: cannot change to ${HOME}"
 clean_and_link () {
     NewDir="$1"
     if [ -z "${NewDir}" ]; then
-	echo "Warning: args not found."
-	return
+        echo "Warning: args not found."
+        return
     fi
     if [ -e "${HOME}/${NewDir}" ]; then
-	rm -r -f -v "${HOME}/${NewDir}"
+        rm -r -f -v "${HOME:?}/${NewDir}"
     fi
     if [ -e "${TempHome}/_TMP_${NewDir}" ]; then
-	rm -r -f -v "${TempHome}/_TMP_${NewDir}"
+        rm -r -f -v "${TempHome:?}/_TMP_${NewDir}"
     fi
     mkdir -v -p "${TempHome}/_TMP_${NewDir}" || return
     ln -s -f "${TempHome}/_TMP_${NewDir}" "${NewDir}"
