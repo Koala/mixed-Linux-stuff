@@ -1,4 +1,6 @@
 #!/bin/bash
+# getestet mit Debian 10 - Buster
+# wird abgelegt unter: ~/.config/autostart-scripts/
 
 RamDisc="/ramdisc"
 TempHome="${RamDisc}/${USER}"
@@ -9,7 +11,7 @@ error () {
 }
 
 if [ ! -d "${RamDisc}" ]; then
-    error "${RamDisk} not found."
+    error "${RamDisc} not found."
 fi
 
 if [ -d "${TempHome}" ]; then
