@@ -76,4 +76,15 @@ clean_and_link '.vlc/cache'
 
 exit 0
 
-# eof
+# History
+#
+# 11.04.2021
+# - neue Links für den Mozilla-Cache eingearbeitet
+# - einiges befindet sich unter ~/.cache
+#   Links entsprechend angepasst
+
+# ToDo:
+#
+# - clean_and_link () - Verzeichnisse werden nicht erstellt, wenn es sie nicht gibt
+#   Das bedarf einer genaueren Überlegung !!!
+#   Funktioniert so noch nicht -> deshalb auskommentiert
