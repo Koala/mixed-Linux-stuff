@@ -15,7 +15,7 @@ if [ ! -d "${RamDisc}" ]; then
 fi
 
 if [ -d "${TempHome}" ]; then
-    rm -r -f -v "${TempHome}"
+    rm -r -f -v "${TempHome:?}"
 fi
 
 mkdir -p "${TempHome}" || error "Error: cannot mkdir ${TempHome}"
