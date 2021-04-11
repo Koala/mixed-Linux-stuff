@@ -9,11 +9,11 @@ error () {
 }
 
 if [ ! -d "${RamDisc}" ]; then
-    error "Error: ${RamDisk} not found."
+    error "Error: ${RamDisc} not found."
 fi
 
 if [ -d "${TempHome}" ]; then
-    rm -r -f -v "${TempHome}"
+    rm -r -f -v "${TempHome:?}"
 fi
 
 exit 0
