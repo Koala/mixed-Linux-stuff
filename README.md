@@ -1,4 +1,8 @@
-Diverser Kram rund um Linux.
+## Diverser Kram rund um Linux
+
+**ACHTUNG**
+Verwendung auf eigene Gefahr!
+Für Datenverlust wird nicht gehaftet ... 
 
 
 ## Tipps  
