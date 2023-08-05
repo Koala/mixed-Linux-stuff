@@ -42,6 +42,6 @@ k.A.
 
 k.A.
 
-# Beispielansicht
+# :framed_picture: Beispielansicht
 
 ![Beispielansicht](watch_sensors_dfh.sh.png)
