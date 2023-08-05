@@ -39,7 +39,7 @@ Ich kopiere das Archive direkt zusätzlich an einen anderen Platz. Wenn das nich
 2. Hier wird der `mbr` ausgelesen. Falls die Partitionstabelle auf einer Platte größer als 2TB liegt, wird sehr wahrscheinlich eine **GPT** *(GUID Partition Table)* existieren. Das muss dann enstprechend angepasst werden.
 
 
-# Der Originalhinweis
+# :copyright: Der Originalhinweis
 *(steht auch so in der Datei)*
 
     Written by Gerhard Brauer <gerhard.brauer@web.de> 2007
